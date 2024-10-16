@@ -1,0 +1,64 @@
+﻿@page "/Entrance/Index"
+@rendermode InteractiveAuto
+
+<PageTitle>입학</PageTitle>
+
+<h2>경기체육고등학교 온라인 입학 관리 시스템입니다.</h2>
+
+<div class="alert alert-secondary mt-4">
+    <span class="oi oi-pencil me-2" aria-hidden="true"></span>
+    <strong>💡 원서 접수는 2024년 10월 22일(화) 09:00부터 시작됩니다.  (@countdownText)</strong>
+</div>
+
+<div class="button-group mt-5 d-flex flex-wrap">
+    <button class="btn btn-lg btn-primary m-3" @onclick="NavigateToApplication">원서 접수</button>
+    <button class="btn btn-lg btn-success m-3" @onclick="NavigateToConfirmation">접수 확인</button>
+    <button class="btn btn-lg btn-danger m-3" @onclick="NavigateToResult">결과 확인</button>
+    <button class="btn btn-lg btn-secondary m-3" @onclick="NavigateToDashboard">대시보드</button>
+</div>
+
+@code {
+    private System.Timers.Timer? countdownTimer;
+    private string countdownText = string.Empty;
+
+    [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+
+    protected override void OnInitialized()
+    {
+        var targetDate = new DateTime(2024, 10, 22, 9, 0, 0);
+        StartCountdown(targetDate);
+    }
+
+    private void StartCountdown(DateTime targetDate)
+    {
+        countdownTimer = new System.Timers.Timer(1000); // 1초마다 실행
+        countdownTimer.Elapsed += (sender, args) =>
+        {
+            var remainingTime = targetDate - DateTime.Now;
+
+            if (remainingTime.TotalSeconds <= 0)
+            {
+                countdownText = "접수가 시작되었습니다!";
+                countdownTimer?.Stop();
+            }
+            else
+            {
+                countdownText = $"{remainingTime.Days}일 {remainingTime.Hours}시간 {remainingTime.Minutes}분 전";
+            }
+
+            InvokeAsync(StateHasChanged); // UI 업데이트
+        };
+        countdownTimer.AutoReset = true;
+        countdownTimer.Start();
+    }
+
+    private void NavigateToApplication() => NavigationManager.NavigateTo("/Entrance/Application/ConsentForm");
+    private void NavigateToConfirmation() => NavigationManager.NavigateTo("/Entrance/Confirmation");
+    private void NavigateToResult() => NavigationManager.NavigateTo("/Entrance/Result");
+    private void NavigateToDashboard() => NavigationManager.NavigateTo("/Entrance/Dashboard");
+
+    public void Dispose()
+    {
+        countdownTimer?.Dispose();
+    }
+}
