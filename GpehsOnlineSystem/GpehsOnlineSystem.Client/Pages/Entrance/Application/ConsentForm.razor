@@ -44,23 +44,7 @@
             <input type="checkbox" id="consent" name="consent" style="accent-color: blue; margin: 8px; width: 15px; height: 15px;">
             <label for="consent" style="font-size: 1.2em; font-weight: bold;">본 입학원서의 개인정보 수집·이용·제공에 동의합니다.</label>
         </div>
-        <div style="margin-top: 20px; text-align: center;">
-            <button onclick="printConsentForm()" style="padding: 10px 20px; font-size: 1em;">페이지 인쇄</button>
-            <script>
-                function printConsentForm() {
-                    const printContent = document.querySelector('div[style*="border: 2px solid black"]');
-                    const newWindow = window.open('', '', 'width=800,height=600');
-                    newWindow.document.write('<html><head><title>Print</title></head><body>');
-                    newWindow.document.write(printContent.outerHTML);
-                    newWindow.document.write('</body></html>');
-                    newWindow.document.close();
-                    newWindow.print();
-                }
-            </script>
-        </div>
     </div>
-
-
 </body>
 
 <SfSignature></SfSignature>
